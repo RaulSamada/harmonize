@@ -1,0 +1,70 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Procesos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dashboard de Procesos</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>PID</th>
+                <th>Ruta</th>
+                <th>CPU (%)</th>
+                <th>Memoria (MB)</th>
+            </tr>
+        </thead>
+        <tbody id="process-table">
+            <!-- Los procesos se agregarán aquí dinámicamente -->
+        </tbody>
+    </table>
+
+    <!-- Cargar Socket.IO -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // Conectar al servidor WebSocket
+        const socket = io('http://localhost:3000');
+
+        // Actualizar la tabla con los datos de los procesos
+        socket.on('processes', (data) => {
+            const tableBody = document.getElementById('process-table');
+            tableBody.innerHTML = '';  // Limpiar la tabla
+
+            // Crear filas de la tabla para cada proceso
+            data.forEach(process => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${process.name}</td>
+                    <td>${process.pid}</td>
+                    <td>${process.path}</td>
+                    <td>${process.cpu}%</td>
+                    <td>${process.memory} MB</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        });
+    </script>
+</body>
+</html>
