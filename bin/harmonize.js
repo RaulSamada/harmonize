@@ -42,6 +42,11 @@ switch (command) {
     case 'dashboard':
         require('../src/server');
         break;
+    
+    case 'docker':
+        instance.dockerList();
+        break;
+
     default:
         console.log('❓ Be sure you are using the corrects commands:');
         console.log('  harmonize start <name> <path_file>');
